@@ -3,19 +3,20 @@ pipeline {
         stages{
             stage('1.Check out'){
                 steps{
-                     git url: 'https://github.com/Prakash-code-sys/UI_Testing_from_Scratch'
+                     git branch: 'main',
+                     url: 'https://github.com/Prakash-code-sys/UI_Testing_from_Scratch'
                 }
                 
             }
             stage('2.Install Playwright'){
                 steps{
-                    sh 'npm ci'
-                    sh 'npx playwright install'
+                    bat 'npm ci'
+                    bat 'npx playwright install'
                 }
             }
             stage('3.Run tests'){
                 steps{
-                    sh 'npx playwright test'
+                    bat 'npx playwright test'
                 }
             }
 
@@ -23,8 +24,10 @@ pipeline {
 
         post {
             always {
-                archiveArtifacts artifacts: 'playwright-report/**'
-                junit 'test-results/*.xml'
+                archiveArtifacts artifacts: 'playwright-report/**',
+                allowEmptyArchive: true,
+                junit 'test-results/*.xml',
+                allowEmptyResults: true
             }
         }
     
