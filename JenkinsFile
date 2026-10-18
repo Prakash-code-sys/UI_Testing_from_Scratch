@@ -26,7 +26,7 @@ pipeline {
             always {
                 archiveArtifacts artifacts: 'playwright-report/**',
                 allowEmptyArchive: true,
-                junit 'test-results/*.xml',
+                junit testResults: 'test-results/*.xml',
                 allowEmptyResults: true
             }
         }
