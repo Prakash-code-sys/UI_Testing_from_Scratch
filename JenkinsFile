@@ -1,0 +1,31 @@
+pipeline {
+    agent any 
+        stages{
+            stage('1.Check out'){
+                steps{
+                     git url: 'https://github.com'
+                }
+                
+            }
+            stage('2.Install Playwright'){
+                steps{
+                    sh 'npm ci'
+                    sh 'npx playwright install'
+                }
+            }
+            stage('3.Run tests'){
+                steps{
+                    sh 'npx playwright test'
+                }
+            }
+
+        }
+
+        post {
+            always {
+                archiveArtifacts artifacts: 'playwright-report/**'
+                junit 'test-results/*.xml'
+            }
+        }
+    
+}
