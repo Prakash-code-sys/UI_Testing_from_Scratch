@@ -33,6 +33,11 @@ pipeline {
                     testResults: 'test-results/*.xml',
                     allowEmptyResults: true
                 )
+                emailText(
+                    subject: "Jenkins Build:",
+                    body: "Build result: Build URL: ",
+                     to: 'prakashraj.manimaran@gmail.com'
+                )
             }
         }
     
