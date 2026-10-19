@@ -1,10 +1,7 @@
 pipeline {
     agent any 
      
-     environment {
-        BASE_URL = credentials('BASE_URL')
-        
-    }
+     
       options{
         buildDiscarder(logRotator(
             numToKeepStr : '5',
@@ -24,6 +21,15 @@ pipeline {
                     bat 'npm ci'
                     bat 'npx playwright install'
                 }
+            }
+            stage('Create .env File') { 
+                environment { 
+                    BASE_URL = credentials('BASE_URL') 
+                }
+            steps { 
+                powershell ''' 
+                      @" BASE_URL=$env:BASE_URL"@ | Set-Content -Path .env -Encoding utf8 
+                ''' 
             }
             stage('3.Run tests'){
                 steps{
