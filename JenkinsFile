@@ -1,5 +1,12 @@
 pipeline {
     agent any 
+
+      options{
+        buildDiscarder(logRotator(
+            numToKeepStr : '10',
+            artifactNumToKeepStr: '10'
+        ))
+      }
         stages{
             stage('1.Check out'){
                 steps{
@@ -36,7 +43,7 @@ pipeline {
                 emailext(
                     subject: "Jenkins Build:",
                     body: "Build result: Build URL: ",
-                     to: 'prakashraj.manimaran@gmail.com'
+                    to: 'prakashraj.manimaran@gmail.com'
                 )
             }
         }
