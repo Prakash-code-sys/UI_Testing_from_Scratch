@@ -1,60 +1,55 @@
 pipeline {
-    agent any 
+    agent any
 
-      options{
+    environment {
+        BASE_URL = credentials('BASE_URL')
+    }
+
+    options {
         buildDiscarder(logRotator(
-            numToKeepStr : '5',
+            numToKeepStr: '5',
             artifactNumToKeepStr: '5'
         ))
-      }
-        stages{
-            stage('1.Check out'){
-                steps{
-                     git branch: 'main',
-                     url: 'https://github.com/Prakash-code-sys/UI_Testing_from_Scratch'
-                }
-                
-            }
-            stage('2.Install Playwright'){
-                steps{
-                    bat 'npm ci'
-                    bat 'npx playwright install'
-                }
-            }
-            stage('Create .env File') { 
-                environment { 
-                    BASE_URL = credentials('BASE_URL') 
-                }
-            steps { 
-                powershell ''' 
-                      @" BASE_URL=$env:BASE_URL"@ | Set-Content -Path .env -Encoding utf8 
-                ''' 
-            }
-            stage('3.Run tests'){
-                steps{
-                    bat 'npx playwright test'
-                }
-            }
+    }
 
+    stages {
+        stage('1.Check out') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/Prakash-code-sys/UI_Testing_from_Scratch'
+            }
         }
 
-        post {
-            always {
-                archiveArtifacts( 
-                    artifacts: 'playwright-report/**',
-                    allowEmptyArchive: true
-                )
-
-                junit (
-                    testResults: 'test-results/*.xml',
-                    allowEmptyResults: true
-                )
-                emailext(
-                    subject: "Jenkins Build:",
-                    body: "Build result: Build URL: ",
-                    to: 'prakashraj.manimaran@gmail.com'
-                )
+        stage('2.Install Playwright') {
+            steps {
+                bat 'npm ci'
+                bat 'npx playwright install chromium'
             }
         }
-    
+
+        stage('3.Run tests') {
+            steps {
+                bat 'npx playwright test'
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts(
+                artifacts: 'playwright-report/**',
+                allowEmptyArchive: true
+            )
+
+            junit(
+                testResults: 'test-results/*.xml',
+                allowEmptyResults: true
+            )
+            emailext(
+                subject: 'Jenkins Build:',
+                body: 'Build result: Build URL: ',
+                to: 'prakashraj.manimaran@gmail.com'
+            )
+        }
+    }
 }
