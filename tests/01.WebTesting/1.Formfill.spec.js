@@ -1,5 +1,7 @@
 import {test,expect} from '@playwright/test'
 //import { test, expect } from '../../fixtures/fixture.js';
+import fs from 'node:fs/promises'
+import path from 'node:path'
 
 test('1.Form filling',{tag:['@formFill']},async({page})=>{
 
@@ -286,5 +288,68 @@ test('12.Web table',{tag:["@webTable"]},async({page})=>{
               console.log(data)
         }
     }
+    }
+})
+
+
+test('13.Download',{tag:['@download']},async({page})=>{
+
+    //Go to URL
+    await page.goto(process.env.BASE_URL)
+    const downloadDir= path.resolve('downloads')
+    await fs.mkdir(downloadDir,{recursive:true})
+
+    await page.getByText('Download Files').click()
+    
+    const [download]= await Promise.all([
+        page.waitForEvent('download'),
+        page.getByText('Download PDF File').nth(2).click()
+
+
+    ])
+    const save = await page.locator('#save').click()
+    await save.saveAs(path.join(downloadDir,'name.txt'))
+
+
+});
+
+test('14.FrameLocator',{tag:['@frames']},async({page})=>{
+
+    await page.goto('https://www.playwrightautomation.com/practice.html?utm_source=chatgpt.com#section-frame-counting')
+    
+    const frames=page.frames()
+    console.log(frames.length)
+
+    const data= await page.locator('#travel-dashboard').frameLocator('#frame-flight-status')
+    const date= await data.locator('.wh').innerText()
+    console.log(date)
+
+})
+
+test('15.Invlaid links',{tag:['@invalid']},async({page})=>{
+    //Go to URL
+    await page.goto(process.env.BASE_URL)
+
+    const links = page.locator('a')
+    const total_links= await links.count()
+
+    for(let i=0;i<await links.count();i++){
+         const href= await links.nth(i).getAttribute('href')
+         if(href){
+            const url= new URL(href,page.url()).href;
+            try {
+                const response= await page.request.get(url);
+                const status= response.status()
+                if(status>=400){
+                    console.log('broken link',url,'status :',status)
+                }else{
+                    console.log('Active :',url,'status:',status)
+                }
+
+            } catch(error) {
+                console.log(error.message())
+            }
+         }
+
     }
 })
