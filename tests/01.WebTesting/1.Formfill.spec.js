@@ -4,7 +4,7 @@ import {test,expect} from '@playwright/test'
 test('1.Form filling',{tag:['@formFill']},async({page})=>{
 
     //Go to URL
-    await page.goto(process.env.BASE_URL)
+    await page.goto(`/`)
    
     //Name
     const name= await page.locator('#name')
@@ -32,7 +32,7 @@ test('1.Form filling',{tag:['@formFill']},async({page})=>{
 test('2.Radio Buttons',{tag:['@radioButton']},async({page})=>{
 
     //Go to URL
-    await page.goto(process.env.BASE_URL)
+    await page.goto(`/`)
 
     //male radio Button
     const male= page.locator('#male')
@@ -48,7 +48,7 @@ test('2.Radio Buttons',{tag:['@radioButton']},async({page})=>{
 
 test('3.Check Boxes',{tag:['@checkBox']},async({page})=>{
     //Go to URL
-    await page.goto(process.env.BASE_URL)
+    await page.goto(`/`)
     
     //locators for days
     const monday= page.locator('#monday')
@@ -72,7 +72,7 @@ test('3.Check Boxes',{tag:['@checkBox']},async({page})=>{
 test('4.Drop down',{tag:['@dropDown']},async({page})=>{
     
     //Go to URL
-    await page.goto(process.env.BASE_URL)
+    await page.goto(`/`)
     
     //county selection- Single Drop down
     const country= page.locator('#country')
@@ -99,7 +99,7 @@ test('4.Drop down',{tag:['@dropDown']},async({page})=>{
 
 test('5.upload files',{tag:['@uploadFiles']},async({page})=>{
     //Go to URL
-    await page.goto(process.env.BASE_URL)
+    await page.goto(`/`)
     
     //singleFile upload
     const singleFile= page.locator('#singleFileInput')
@@ -120,7 +120,7 @@ test('5.upload files',{tag:['@uploadFiles']},async({page})=>{
 
 test('6.drag&drop',{tag:['@dragTo']},async({page})=>{
     //Go to URL
-    await page.goto(process.env.BASE_URL)
+    await page.goto(`/`)
     //drag and drop
     await page.locator('#draggable').dragTo(page.locator('#droppable'))
     await page.waitForTimeout(3000)
@@ -128,7 +128,7 @@ test('6.drag&drop',{tag:['@dragTo']},async({page})=>{
 
 test('7.Alerts & Popups',{tag:['@alerts']},async({page})=>{
     //Go to URL
-    await page.goto(process.env.BASE_URL)
+    await page.goto(`/`)
 
     page.on('dialog',async dialog=>{
 
@@ -158,7 +158,7 @@ test('7.Alerts & Popups',{tag:['@alerts']},async({page})=>{
 
 test('8.Mouse actions',{tag:['@mouse']},async({page})=>{
     //Go to URL
-    await page.goto(process.env.BASE_URL)
+    await page.goto(`/`)
     //hover
     const hover=page.getByText('Point Me')
     await hover.hover()
@@ -177,7 +177,7 @@ test('8.Mouse actions',{tag:['@mouse']},async({page})=>{
 
 test('9.Robot class_Keyboard',{tag:['@keyboard']},async({page})=>{
     //Go to URL
-    await page.goto(process.env.BASE_URL)
+    await page.goto(`/`)
 
     //right click
     const home= page.getByRole('link',{name:'Home'}).nth(0)
@@ -195,7 +195,7 @@ test('9.Robot class_Keyboard',{tag:['@keyboard']},async({page})=>{
 
 test('10.screenshot',{tag:['@screenshot']},async({page})=>{
     //Go to URL
-    await page.goto(process.env.BASE_URL)
+    await page.goto(`/`)
 
     async function getScreenshot(page,name){
         await page.screenshot({path:`screenshots/${name}.png`,fullPage:true})
@@ -208,7 +208,7 @@ test('10.screenshot',{tag:['@screenshot']},async({page})=>{
 
 test('11.Window handling',{tag:['@window_handling']},async({page,context})=>{
      //Go to URL
-    await page.goto(process.env.BASE_URL)
+    await page.goto(`/`)
    
     //capture new window correctly
     const [newTab]= await Promise.all([
@@ -249,7 +249,7 @@ test('12.Web table',{tag:["@webTable"]},async({page})=>{
         await selectedRow.locator('//input').click()
     }
     //Go to URL
-    await page.goto(process.env.BASE_URL)
+    await page.goto(`/`)
     //capture table
     const table = page.locator('#productTable')
     //capture table's rows
